@@ -189,10 +189,78 @@ const useTypewriter = (texts, speed = 80, deleteSpeed = 40, delay = 1200) => {
 };
 
 
+const Loader = ({ darkMode }) => {
+  return (
+    <div
+    style={{
+      position: 'fixed',
+      inset: 0,
+      background: '#05070f',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 99999,
+        transition: 'opacity 0.6s ease'
+      }}
+    >
+      <div style={{ textAlign: 'center' }}>
+        <div
+          style={{
+            fontSize: '2rem',
+            fontWeight: 700,
+            letterSpacing: '2px',
+            background: 'linear-gradient(135deg, #00f5ff, #a855f7)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            marginBottom: '1rem'
+          }}
+        >
+          SV
+        </div>
+
+        <div
+          style={{
+            width: '60px',
+            height: '60px',
+            borderRadius: '50%',
+            border: '3px solid rgba(0,245,255,0.2)',
+            borderTop: '3px solid #00f5ff',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto'
+          }}
+        />
+
+        <p
+          style={{
+            marginTop: '1.2rem',
+            fontSize: '0.9rem',
+            color: '#b0b0b0',
+            letterSpacing: '1px'
+          }}
+        >
+          Loading experience…
+        </p>
+      </div>
+    </div>
+  );
+};
+
+
 const Portfolio = () => {
   const [darkMode, setDarkMode] = useState(true);
   const [scrollY, setScrollY] = useState(0);
   const [activeSection, setActiveSection] = useState('hero');
+  const [menuOpen, setMenuOpen] = useState(false);
+  
+  const [loading, setLoading] = useState(true);
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setLoading(false);
+  }, 1500); // 1.5s for smooth UX
+
+  return () => clearTimeout(timer);
+}, []);
+
 
   const typingText = useTypewriter([
     "Full-Stack Developer | Python - Django / Flask | Angular / ReactJs",
@@ -201,28 +269,41 @@ const Portfolio = () => {
   ]);
 
 
+
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
+  const sections = [
+    'hero',
+    'about',
+    'skills',
+    'experience',
+    'projects',
+    'education',
+    'contact',
+  ];
 
-      const sections = ['hero', 'about', 'skills', 'experience', 'projects', 'education', 'contact'];
-      const currentSection = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();          
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
+  const handleScroll = () => {
+    const scrollPosition = window.scrollY + 150; // offset for navbar
 
-      if (currentSection) {
-        setActiveSection(currentSection);
+    let current = 'hero';
+
+    sections.forEach((id) => {
+      const section = document.getElementById(id);
+      if (!section) return;
+
+      if (scrollPosition >= section.offsetTop) {
+        current = id;
       }
-    };
+    });
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    setActiveSection(current);
+  };
+
+  window.addEventListener('scroll', handleScroll);
+  handleScroll(); // run once on mount
+
+  return () => window.removeEventListener('scroll', handleScroll);
+}, []);
+
 
   const skills = {
     'Frontend': ['React.js', 'Angular', 'HTML5', 'CSS3', 'JavaScript', 'Bootstrap'],
@@ -344,6 +425,12 @@ const Portfolio = () => {
     link.click();
     document.body.removeChild(link);
   };
+
+
+  if (loading) {
+  return <Loader darkMode={darkMode} />;
+}
+
 
   return (
     <div style={{
@@ -487,7 +574,7 @@ const Portfolio = () => {
       <ThreeBackground darkMode={darkMode} />
 
       {/* Navigation */}
-      <nav style={{
+      <nav className="main-navbar" style={{
         position: 'fixed',
         top: 0,
         left: 0,
@@ -515,28 +602,40 @@ const Portfolio = () => {
           SV
         </div>
 
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+        {/* <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}> */}
+        <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
+
           {['About', 'Skills', 'Experience', 'Projects', 'Contact'].map(item => (
             <button
               key={item}
-              onClick={() => scrollToSection(item.toLowerCase())}
-              className="magnetic-button"
+              onClick={() => {
+                scrollToSection(item.toLowerCase());
+                setMenuOpen(false); // closes mobile menu
+              }}
+              className={`magnetic-button ${
+  activeSection === item.toLowerCase() ? 'active' : ''
+}`}
+
               style={{
                 background: 'none',
                 border: 'none',
-                color: activeSection === item.toLowerCase()
-                  ? (darkMode ? '#00f5ff' : '#dc2626')
-                  : (darkMode ? '#e0e0e0' : '#6b7280'),
                 fontSize: '0.95rem',
                 fontWeight: 500,
-                transition: 'color 0.3s ease',
                 letterSpacing: '0.5px',
-                textShadow: darkMode ? 'none' : 'none'
+                transition: 'color 0.3s ease',
+
+                color: menuOpen
+                  ? (darkMode ? '#00f5ff' : '#f9f9f9')   // mobile menu open
+                  : activeSection === item.toLowerCase()
+                    ? (darkMode ? '#00f5ff' : '#dc2626') // active section
+                    : (darkMode ? '#e0e0e0' : '#727272') // default
               }}
             >
               {item}
             </button>
           ))}
+
+
 
           <button
             onClick={() => setDarkMode(!darkMode)}
@@ -555,7 +654,21 @@ const Portfolio = () => {
           >
             {darkMode ? <Sun size={20} /> : <Moon size={20} />}
           </button>
+
+
         </div>
+
+        <button
+          className="hamburger"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+          style={{
+            color: darkMode ? '#00f5ff' : '#b91c1c',
+          }}
+        >
+          {menuOpen ? '✕' : '☰'}
+        </button>
+
       </nav>
 
       {/* Hero Section */}
