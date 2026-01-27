@@ -1,0 +1,109 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Space Grotesk', 'Rajdhani', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #05070f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00f5ff, #a855f7);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00f5ff, #22c55e);
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(0, 245, 255, 0.3);
+  color: #fff;
+}
+
+::-moz-selection {
+  background: rgba(0, 245, 255, 0.3);
+  color: #fff;
+}
+
+/* Focus visible for accessibility */
+*:focus-visible {
+  outline: 2px solid #00f5ff;
+  outline-offset: 2px;
+}
+
+/* Prevent horizontal scroll */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+
+/* =========================
+   GLOBAL RESPONSIVE STYLES
+   ========================= */
+
+@media (max-width: 640px) {
+  .main-navbar {
+    padding: 0.6rem 1rem !important;
+  }
+
+  .main-navbar > div:first-child {
+    font-size: 1.2rem !important;
+  }
+
+  .main-navbar button {
+    font-size: 0.8rem !important;
+  }
+
+  .main-navbar > div:last-child {
+    gap: 1rem !important;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .main-navbar > div:last-child::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Disable custom cursor on mobile */
+  * {
+    cursor: auto !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .main-navbar {
+    padding: 0.8rem 1.5rem !important;
+  }
+
+  .main-navbar button {
+    font-size: 0.9rem !important;
+  }
+}
