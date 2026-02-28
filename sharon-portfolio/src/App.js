@@ -263,7 +263,7 @@ useEffect(() => {
 
 
   const typingText = useTypewriter([
-    "Full-Stack Developer | Python - Django / Flask | Angular / ReactJs",
+    "Full-Stack Developer | Python - Django | Angular / ReactJs",
     "Python Full-Stack Developer",
     "Software Engineer Trainee"
   ]);
@@ -276,27 +276,38 @@ useEffect(() => {
     'about',
     'skills',
     'experience',
+    'certifications',
     'projects',
     'education',
     'contact',
   ];
 
-  const handleScroll = () => {
-    const scrollPosition = window.scrollY + 150; // offset for navbar
+  
 
-    let current = 'hero';
+const handleScroll = () => {
+  const scrollPosition = window.scrollY + window.innerHeight / 3;
+  setScrollY(window.scrollY);
 
-    sections.forEach((id) => {
-      const section = document.getElementById(id);
-      if (!section) return;
+  let current = 'hero';
 
-      if (scrollPosition >= section.offsetTop) {
-        current = id;
-      }
-    });
+  sections.forEach((id) => {
+    const section = document.getElementById(id);
+    if (!section) return;
 
-    setActiveSection(current);
-  };
+    const top = section.offsetTop;
+    const height = section.offsetHeight;
+
+    if (
+      scrollPosition >= top &&
+      scrollPosition < top + height
+    ) {
+      current = id;
+    }
+  });
+
+  setActiveSection(current);
+};
+
 
   window.addEventListener('scroll', handleScroll);
   handleScroll(); // run once on mount
@@ -306,10 +317,10 @@ useEffect(() => {
 
 
   const skills = {
-    'Frontend': ['React.js', 'Angular', 'HTML5', 'CSS3', 'JavaScript', 'Bootstrap'],
+    'Frontend': ['React.js', 'Angular', 'HTML5', 'CSS3', 'JavaScript', 'jQuery', 'Bootstrap'],
     'Backend': ['Python', 'Django', 'Flask', 'REST APIs'],
-    'Database': ['MySQL', 'MongoDB', 'SQLite'],
-    'Tools': ['Git', 'Docker', 'Firebase', 'GenAI', 'Genkit']
+    'Database': ['MySQL', 'MongoDB', 'PostgreSQL', 'SQLite'],
+    'Tools': ['Git', 'Docker', 'Firebase', 'GenAI', 'Genkit', 'AWS S3']
   };
 
   const experience = [
@@ -352,7 +363,7 @@ useEffect(() => {
   const projects = [
     {
       title: 'Air Quality Monitoring System',
-      description: 'Real-time air quality monitoring application with data visualization and alerting capabilities',
+      description: 'Real-time air quality monitoring dashboard using React.js & Django, integrated with IoT sensors with data visualization and alerting capabilities',
       tech: ['Python', 'Django', 'React.Js', 'REST API', 'MySQL', 'Cryptography'],
       github: 'https://github.com/sh46on/Air-Monitoring-Dashboard'
     },
@@ -407,6 +418,19 @@ useEffect(() => {
       status: '72%',
       institution: 'Sacred Heart Higher Secondary School, Thevara'
     },
+  ];
+
+  const certifications = [
+
+    { name: 'Python Full-Stack Developer Trainee', organization: 'Quest Innovative Solutions Pvt Ltd' },
+    { name: 'AWS S3 Basics', organization: 'United Latino Students Association' },
+    { name: 'SQL and Relational Databases 101', organization: 'United Latino Students Association' },
+    { name: 'AI-Powered Software and System Design', organization: 'DeepLearning.AI' },
+    { name: 'Team Software Engineering with AI', organization: 'DeepLearning.AI' },
+    { name: 'Introduction to Generative AI for Software Development', organization: 'DeepLearning.AI' },
+    { name: 'Agile Project Management Certifications', organization: 'HP LIFE' },
+    { name: 'Introduction to Cybersecurity Awareness', organization: 'HP LIFE' },
+
   ];
 
   const scrollToSection = (sectionId) => {
@@ -574,21 +598,48 @@ useEffect(() => {
       <ThreeBackground darkMode={darkMode} />
 
       {/* Navigation */}
-      <nav className="main-navbar" style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-        background: darkMode ? 'rgba(5, 7, 15, 0.95)' : 'rgba(255, 255, 255, 0.15)',
-        backdropFilter: 'blur(10px)',
-        borderBottom: `1px solid ${darkMode ? 'rgba(0, 245, 255, 0.1)' : 'rgba(255, 255, 255, 0.3)'}`,
-        padding: '1rem 2rem',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        boxShadow: darkMode ? '0 4px 20px rgba(0, 0, 0, 0.3)' : '0 4px 20px rgba(0, 0, 0, 0.1)'
-      }}>
+<nav
+  className="main-navbar"
+  style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+
+    background:
+      scrollY > 60
+        ? darkMode
+          ? 'rgba(5, 7, 15, 0.95)'
+          : 'rgba(255, 255, 255, 0.85)'
+        : darkMode
+          ? 'rgba(5, 7, 15, 0.7)'
+          : 'rgba(255, 255, 255, 0.15)',
+
+    backdropFilter: 'blur(10px)',
+
+    borderBottom: `1px solid ${
+      darkMode
+        ? 'rgba(0, 245, 255, 0.1)'
+        : 'rgba(255, 255, 255, 0.3)'
+    }`,
+
+    padding: '1rem 2rem',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    boxShadow:
+      scrollY > 60
+        ? darkMode
+          ? '0 6px 25px rgba(0, 0, 0, 0.5)'
+          : '0 6px 25px rgba(0, 0, 0, 0.15)'
+        : 'none',
+
+    transition: 'all 0.3s ease'
+  }}
+>
+
         <div style={{
           fontSize: '1.5rem',
           fontWeight: 700,
@@ -605,7 +656,7 @@ useEffect(() => {
         {/* <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}> */}
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
 
-          {['About', 'Skills', 'Experience', 'Projects', 'Contact'].map(item => (
+          {['About', 'Skills', 'Experience', 'Certifications', 'Projects', 'Contact'].map(item => (
             <button
               key={item}
               onClick={() => {
@@ -855,7 +906,7 @@ useEffect(() => {
                 marginBottom: '1.5rem',
                 fontWeight: 400
               }}>
-                Results-driven Python Full-Stack Developer with hands-on experience building scalable, responsive, and production-ready web applications using Django, React, Angular, REST APIs, and modern databases.
+                Python Full-Stack Developer with hands-on experience building scalable, responsive, and production-ready web applications using Django, React, Angular, REST APIs, and modern databases.
               </p>
 
               <p style={{
@@ -1213,6 +1264,89 @@ useEffect(() => {
           </div>
         </div>
       </section>
+
+
+
+
+
+   {/* Certifications Section */}
+<section
+  id="certifications"
+  style={{
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    padding: '6rem 2rem',
+    position: 'relative',
+    zIndex: 1
+  }}
+>
+  <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+    <h2
+      style={{
+        fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+        fontWeight: 700,
+        marginBottom: '3rem',
+        color: darkMode ? '#a855f7' : '#ea580c',
+        letterSpacing: '-1px',
+        textShadow: darkMode
+          ? '0 0 20px rgba(168, 85, 247, 0.5)'
+          : '0 2px 10px rgba(234, 88, 12, 0.25)'
+      }}
+    >
+      Licenses & Certifications
+    </h2>
+
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '2rem'
+      }}
+    >
+      {certifications.map((cert, idx) => (
+        <div
+          key={idx}
+          className="glassmorphism hover-lift"
+          style={{
+            padding: '2rem',
+            borderRadius: '20px',
+            animation: 'fadeInUp 0.8s ease-out forwards',
+            animationDelay: `${idx * 0.1}s`,
+            opacity: 0
+          }}
+        >
+          <h3
+            style={{
+              fontSize: '1.2rem',
+              fontWeight: 600,
+              marginBottom: '0.75rem',
+              color: darkMode ? '#00f5ff' : '#ea580c'
+            }}
+          >
+            {cert.name}
+          </h3>
+
+          <p
+            style={{
+              fontSize: '0.95rem',
+              color: darkMode ? '#b0b0b0' : '#1f2937',
+              fontWeight: 400
+            }}
+          >
+            {cert.organization}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
 
       {/* Projects Section */}
       <section id="projects" style={{
